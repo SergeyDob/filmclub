@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Film Club</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        a { color: #0066cc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1 th:text="${message}">Welcome Message</h1>
+    <p>Explore our members: <a href="/api/members">View Members</a></p>
+</body>
+</html>
