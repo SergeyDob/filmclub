@@ -2,9 +2,9 @@ package onpu.op.edu.filmclub.controller;
 
 import onpu.op.edu.filmclub.dto.MemberDTO;
 import onpu.op.edu.filmclub.dto.AttendanceDTO;
-import onpu.op.edu.filmclub.entity.Member;
 import onpu.op.edu.filmclub.entity.Attendance;
-import onpu.op.edu.filmclub.repository.MemberRepository;
+import onpu.op.edu.filmclub.entity.Member;
+import onpu.op.edu.filmclub.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +17,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class MemberController {
 
+    private final MemberService memberService;
+
     @Autowired
-    private MemberRepository memberRepository;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @GetMapping("/members")
     public List<MemberDTO> getAllMembers() {
-        List<Member> members = memberRepository.findAll();
+        List<Member> members = memberService.getAllMembers(); // Викликаємо метод сервісу
         return members.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
