@@ -9,6 +9,9 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
+# Завантажує залежності для офлайн-режиму (не обов’язково, але корисно)
+RUN ./mvnw dependency:go-offline
+
 # Копіює вихідний код
 COPY src src
 
