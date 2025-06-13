@@ -39,4 +39,10 @@ public class ReviewController {
     public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
     }
+
+    // Новий запит
+    @DeleteMapping("/member/{memberId}")
+    public void deleteReviewsByMember(@PathVariable Long memberId) {
+        reviewService.deleteReviewsByMemberId(memberId);
+    }
 }

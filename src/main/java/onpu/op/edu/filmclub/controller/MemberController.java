@@ -6,11 +6,10 @@ import onpu.op.edu.filmclub.entity.Attendance;
 import onpu.op.edu.filmclub.entity.Member;
 import onpu.op.edu.filmclub.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map; // Додано імпорт для Map
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,16 +23,79 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    @PostMapping("/members")
+    public Member createMember(@RequestBody Member member) {
+        return memberService.saveMember(member);
+    }
+
     @GetMapping("/members")
     public List<MemberDTO> getAllMembers() {
-        List<Member> members = memberService.getAllMembers(); // Викликаємо метод сервісу
+        List<Member> members = memberService.getAllMembers();
         return members.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/members/{id}")
+    public Member getMemberById(@PathVariable Long id) {
+        return memberService.getMemberById(id).orElse(null);
+    }
+
+    @PutMapping("/members/{id}")
+    public Member updateMember(@PathVariable Long id, @RequestBody Member member) {
+        member.setId(id);
+        return memberService.saveMember(member);
+    }
+
+    @DeleteMapping("/members/{id}")
+    public void deleteMember(@PathVariable Long id) {
+        memberService.deleteMember(id);
+    }
+
+    // Існуючі методи
+    @GetMapping("/members/{id}/screenings")
+    public List<AttendanceDTO> getMemberScreenings(@PathVariable Long id) {
+        Member member = memberService.getMemberById(id)
+                .orElseThrow(() -> new RuntimeException("Member not found with id: " + id));
+        return member.getAttendances().stream()
+                .map(this::convertToAttendanceDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/members/{id}/stats")
+    public Map<String, Long> getMemberStats(@PathVariable Long id) {
+        return memberService.getMemberStats(id);
+    }
+
+    // Нові запити
+    @GetMapping("/members/search/email")
+    public List<Member> searchMembersByEmail(@RequestParam String email) {
+        return memberService.searchMembersByEmail(email);
+    }
+
+    @GetMapping("/members/search/name")
+    public List<Member> searchMembersByName(@RequestParam String name) {
+        return memberService.searchMembersByName(name);
+    }
+
+    @GetMapping("/members/without-attendance")
+    public List<Member> getMembersWithoutAttendance() {
+        return memberService.getMembersWithoutAttendance();
+    }
+
+    @GetMapping("/members/with-reviews")
+    public List<Member> getMembersWithReviews() {
+        return memberService.getMembersWithReviews();
+    }
+
+    @GetMapping("/members/active")
+    public List<Member> getActiveMembers(@RequestParam int minAttendance) {
+        return memberService.getActiveMembers(minAttendance);
+    }
+
+    // Додані методи конвертації
     private MemberDTO convertToDTO(Member member) {
-        MemberDTO dto = new MemberDTO(
+        return new MemberDTO(
                 member.getId(),
                 member.getName(),
                 member.getEmail(),
@@ -41,7 +103,6 @@ public class MemberController {
                         .map(this::convertToAttendanceDTO)
                         .collect(Collectors.toList())
         );
-        return dto;
     }
 
     private AttendanceDTO convertToAttendanceDTO(Attendance attendance) {

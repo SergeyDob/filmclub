@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -19,18 +18,18 @@ public class ReviewService {
     }
 
     public List<Review> getReviewsByMovie(Long movieId) {
-        return reviewRepository.findByMovieId(movieId);
+        return reviewRepository.findByMovie_Id(movieId);
     }
 
     public List<Review> getReviewsByMember(Long memberId) {
-        return reviewRepository.findByMemberId(memberId);
-    }
-
-    public Review getReviewById(Long id) {
-        return reviewRepository.findById(id).orElse(null);
+        return reviewRepository.findByMember_Id(memberId);
     }
 
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public void deleteReviewsByMemberId(Long memberId) {
+        reviewRepository.deleteAllByMember_Id(memberId);
     }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -26,4 +27,7 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private List<Screening> screenings;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
 }

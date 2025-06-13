@@ -5,8 +5,9 @@ import onpu.op.edu.filmclub.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -23,8 +24,7 @@ public class MovieService {
     }
 
     public Movie getMovieById(Long id) {
-        Optional<Movie> movie = movieRepository.findById(id);
-        return movie.orElse(null);
+        return movieRepository.findById(id).orElse(null);
     }
 
     public void deleteMovie(Long id) {
@@ -45,5 +45,33 @@ public class MovieService {
 
     public List<Movie> getUnreviewedMovies() {
         return movieRepository.findMoviesWithoutReviews();
+    }
+
+    // Нові методи
+    public List<Movie> searchMoviesByTitle(String title) {
+        return movieRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public List<Movie> getMoviesBetweenDates(LocalDate start, LocalDate end) {
+        return movieRepository.findByReleaseDateBetween(start, end);
+    }
+
+    public List<String> getAllGenres() {
+        return movieRepository.findAll().stream()
+                .map(Movie::getGenre)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public long countAllMovies() {
+        return movieRepository.count();
+    }
+
+    public List<Movie> getLatestMovies(int count) {
+        return movieRepository.findTopByOrderByReleaseDateDesc(count);
+    }
+
+    public List<Movie> getMoviesByDirector(String director) {
+        return movieRepository.findByDirectorContainingIgnoreCase(director);
     }
 }

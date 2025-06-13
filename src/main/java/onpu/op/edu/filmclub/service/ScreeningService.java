@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ScreeningService {
@@ -23,15 +22,14 @@ public class ScreeningService {
     }
 
     public Screening getScreeningById(Long id) {
-        Optional<Screening> screening = screeningRepository.findById(id);
-        return screening.orElse(null);
-    }
-
-    public List<Screening> getScreeningsByMovieId(Long movieId) {
-        return screeningRepository.findByMovieId(movieId);
+        return screeningRepository.findById(id).orElse(null);
     }
 
     public void deleteScreening(Long id) {
         screeningRepository.deleteById(id);
+    }
+
+    public List<Screening> getScreeningsByMovieId(Long movieId) {
+        return screeningRepository.findByMovieId(movieId);
     }
 }

@@ -38,4 +38,11 @@ public class ScreeningController {
     public void deleteScreening(@PathVariable Long id) {
         screeningService.deleteScreening(id);
     }
+
+    // Новий запит
+    @PutMapping("/{id}")
+    public Screening updateScreening(@PathVariable Long id, @RequestBody Screening screening) {
+        screening.setId(id);
+        return screeningService.saveScreening(screening);
+    }
 }

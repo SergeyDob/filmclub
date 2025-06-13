@@ -5,6 +5,8 @@ import onpu.op.edu.filmclub.repository.AttendanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AttendanceService {
 
@@ -17,5 +19,14 @@ public class AttendanceService {
 
     public void deleteAttendance(Long id) {
         attendanceRepository.deleteById(id);
+    }
+
+    // Нові методи
+    public List<Attendance> getAttendancesByMember(Long memberId) {
+        return attendanceRepository.findByMemberId(memberId);
+    }
+
+    public List<Attendance> getAttendancesByScreening(Long screeningId) {
+        return attendanceRepository.findByScreeningId(screeningId);
     }
 }
